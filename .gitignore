@@ -1,0 +1,66 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+out/
+
+# VS Code / Visual Studio
+.vscode/
+.vs/
+
+# Rider
+.idea/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Configuration
+*.config
+*.local.json
+appsettings.*.json
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test results
+TestResult*/
+*.trx
+*.coverage
+*.coveragexml
+
+# Dotnet tools
+.dotnet/
+
+# Cache
+.cache/
+*.swp
+*.lock.json
+
+# Publish output
+publish/
+wwwroot/
+
+# Azure
+.publishsettings
+.azure/
+
+# Docker
+docker-compose.override.yml
+.docker/
+
+# Others
+*.db
+*.bak
