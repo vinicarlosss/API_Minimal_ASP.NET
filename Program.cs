@@ -71,6 +71,13 @@ app.MapGet("/veiculos/{id}", ([FromRoute]int id, IVeiculoServico veiculoServico)
     return Results.Ok(veiculo);
 }).WithTags("Veículos");
 
+app.MapDelete("/veiculo/{id}", ([FromRoute] int id, IVeiculoServico veiculoServico) =>
+{
+    var veiculo = veiculoServico.BuscaPorId(id);
+    if (veiculo == null) return Results.NotFound();
+    veiculoServico.Apagar(veiculo);
+    return Results.Ok("Veículo removido com sucesso");
+}).WithTags("Veículos");
 #endregion
 
 #region App
