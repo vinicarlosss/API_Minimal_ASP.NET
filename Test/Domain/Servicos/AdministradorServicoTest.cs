@@ -15,7 +15,7 @@ public class AdministradorServicoTest
         var assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         var path = Path.GetFullPath(Path.Combine(assemblyPath ?? "", "..", "..", ".."));
         var builder = new ConfigurationBuilder()
-            .SetBasePath( path ?? Directory.GetCurrentDirectory())
+            .SetBasePath(path ?? Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddEnvironmentVariables();
         var configuration = builder.Build();
@@ -42,5 +42,29 @@ public class AdministradorServicoTest
         //Assert
 
         Assert.AreEqual(1, administradorServico.Todos(1).Count());
+    }
+    
+    [TestMethod]
+    public void TestandoBuscarAdministradorPorId()
+    {
+        //Arrange
+
+        var context = CriarContextoDeTeste();
+        context.Database.ExecuteSqlRaw("TRUNCATE TABLE Administradores");
+        var adm = new Administrador();
+        adm.Email = "test@teste.com";
+        adm.Senha = "123456";
+        adm.Perfil = "Adm";
+
+        var administradorServico = new AdministradorServico(context);
+
+        //Act
+
+        administradorServico.Incluir(adm);
+        var result = administradorServico.BuscaPorId(adm.Id);
+
+        //Assert
+
+        Assert.AreEqual(1, result.Id);
     }
 }
