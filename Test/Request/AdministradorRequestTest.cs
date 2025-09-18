@@ -1,27 +1,55 @@
+using System.Net;
+using System.Text;
+using System.Text.Json;
 using MinimalApi.Dominio.Entidades;
+using MinimalApi.Dominio.ModelViews;
+using MinimalApi.DTOs;
+using Test.Helpers;
 
 namespace Test.Requests;
 
 [TestClass]
 public class AdministradorRequestTest
 {
-    [TestMethod]
-    public void TestarGetSetPropriedades()
+    [ClassInitialize]
+    public static void ClassInit(TestContext testContext)
     {
-        //Arrange
-        var adm = new Administrador();
+        Setup.ClassInit(testContext);
+    }
 
-        //Act
-        adm.Id = 1;
-        adm.Email = "test@teste.com";
-        adm.Senha = "123456";
-        adm.Perfil = "Adm";
+    [ClassCleanup]
+    public static void ClassCleanup()
+    {
+        Setup.ClassCleanup();
+    }
 
-        //Assert
-        Assert.AreEqual(1, adm.Id);
-        Assert.AreEqual("test@teste.com", adm.Email);
-        Assert.AreEqual("123456", adm.Senha);
-        Assert.AreEqual("Adm", adm.Perfil);
+    [TestMethod]
+    public async Task TestarGetSetPropriedades()
+    {
+        // Arrange
+        var loginDTO = new LoginDTO{
+            Email = "adm@teste.com",
+            Senha = "123456"
+        };
 
+        var content = new StringContent(JsonSerializer.Serialize(loginDTO), Encoding.UTF8,  "Application/json");
+
+        // Act
+        var response = await Setup.client.PostAsync("/login", content);
+
+        // Assert
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+        var result = await response.Content.ReadAsStringAsync();
+        var admLogado = JsonSerializer.Deserialize<AdministradorLogado>(result, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+
+        Assert.IsNotNull(admLogado?.Email ?? "");
+        Assert.IsNotNull(admLogado?.Perfil ?? "");
+        Assert.IsNotNull(admLogado?.Token ?? "");
+
+        Console.WriteLine(admLogado?.Token);
     }
 }
